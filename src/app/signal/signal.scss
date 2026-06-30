@@ -1,0 +1,20 @@
+section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  line-height: 30px;
+  padding: 20px;
+
+  &:nth-of-type(odd) {
+    background-color: #e6e8eb;   // odd sections
+  }
+
+  &:nth-of-type(even) {
+    background-color: #98c9894d;   // even sections
+  }
+
+  span {
+    font-weight: bold;
+  }
+}
+
