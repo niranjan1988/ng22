@@ -1,5 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal, WritableSignal, computed, untracked, effect, linkedSignal } from '@angular/core';
+import {
+  Component,
+  signal,
+  WritableSignal,
+  computed,
+  untracked,
+  effect,
+  linkedSignal,
+  resource,
+  debounced,
+  afterRenderEffect,
+} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -27,12 +38,37 @@ export class App {
   });
 
   // Resource
-  
+  protected readonly userId = signal(1);
+
+  protected readonly userResource = resource<any, {id: number}>({
+    params: () => ({id: this.userId()}),
+    loader: async ({params}) => {
+      const res = await fetch(`https://jsonplaceholder.typicode.com/users/${params.id}`);
+      if (!res.ok) {
+        throw new Error(`Failed to load user (status: ${res.status})`);
+      }
+      return res.json();
+    }
+  });
+
+  protected readonly userName = computed(() =>
+    this.userResource.hasValue() ? this.userResource.value()!.name : undefined
+  );
+
+  // Debounced signals
+  protected readonly numberToDDebounce = signal(0);
+  protected readonly debouncedNumber = debounced(this.numberToDDebounce, 500);
+
 
   constructor() {
     effect(() => {
       console.log("Title changed to: " + this.title());
     });
+
+    // Runs after the component has rendered and the DOM has been updated
+    afterRenderEffect(()=>{
+      console.log("Title changed to: " + this.title() + "after rendering");
+    })
   }
 
   setTitle(newTitle: string) {
