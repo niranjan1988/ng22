@@ -1,6 +1,7 @@
 <main class="main">
   <div class="content">
     <section>
+      <h2>Signal(set & update), computed, effect, untracked, equal check</h2>
       <div>
         <span>Set Title: </span><input type="text" [value]="title()" (input)="setTitle($event.target.value)" />
       </div>
@@ -28,6 +29,27 @@
     </section>
 
     <section>
+      <h2>Linked Signals</h2>
+      <div><span>Selected Page: </span>{{selectedPage()}}</div>
+      <div>
+        <button (click)="selectedPage.set(pageItems()[2])">Set {{pageItems()[2]}}</button> &nbsp;
+        <button (click)="selectedPage.set(pageItems()[3])">Set {{pageItems()[3]}}</button> &nbsp;
+        <button (click)="selectedPage.set(pageItems()[4])">Set {{pageItems()[4]}}</button> &nbsp;
+      </div>
+      <div>
+        <span>Select Page: </span>
+        <select [value]="selectedPage()" (change)="selectedPage.set($any($event.target).value)">
+          <option *ngFor="let page of pageItems()" [value]="page">{{page}}</option>
+        </select>
+      </div>
+      <div>
+        <button (click)="pageItems.set(['Careers', 'Support', 'FAQ', 'Testimonials', 'Services'])">Reset page items</button>
+        <div> Services are present in both lists</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Resource</h2>
 
     </section>
 
